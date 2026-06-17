@@ -8,6 +8,7 @@ import { ProjectWindow } from "./ProjectWindow";
 import { ConsolePanel } from "./ConsolePanel";
 import { BottomStatusBar } from "./BottomStatusBar";
 import { CommandPalette } from "./CommandPalette";
+import { initialLogs, countBySeverity, type LogEntry } from "./consoleData";
 
 interface MainEditorLayoutProps {
   theme?: "dark" | "light" | "oled";
@@ -16,6 +17,8 @@ interface MainEditorLayoutProps {
 export function MainEditorLayout({ theme = "dark" }: MainEditorLayoutProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
+  const [logs, setLogs] = useState<LogEntry[]>(initialLogs);
+  const counts = countBySeverity(logs);
 
   return (
     <div
@@ -66,10 +69,10 @@ export function MainEditorLayout({ theme = "dark" }: MainEditorLayoutProps) {
         className="gap-1.5 px-1.5 py-1.5"
       >
         <div style={{ flex: 1, overflow: "hidden", borderRadius: "10px", border: "1px solid var(--unity-border)", boxShadow: "var(--unity-shadow)" }}>
-          <ConsolePanel />
+          <ConsolePanel logs={logs} setLogs={setLogs} />
         </div>
       </div>
-      <BottomStatusBar />
+      <BottomStatusBar errorCount={counts.error} warningCount={counts.warning} infoCount={counts.info} />
     </div>
   );
 }
