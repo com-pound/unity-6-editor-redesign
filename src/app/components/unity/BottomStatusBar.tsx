@@ -1,6 +1,12 @@
 import { GitBranch, Wifi, Cpu, HardDrive, Bell } from "lucide-react";
 
-export function BottomStatusBar() {
+interface BottomStatusBarProps {
+  errorCount?: number;
+  warningCount?: number;
+  infoCount?: number;
+}
+
+export function BottomStatusBar({ errorCount = 0, warningCount = 0, infoCount = 0 }: BottomStatusBarProps) {
   return (
     <div
       className="flex items-center gap-3 px-3 h-5 shrink-0"
@@ -18,9 +24,9 @@ export function BottomStatusBar() {
       </div>
       <div style={{ width: "1px", height: "10px", background: "var(--unity-border)" }} />
       <div className="flex items-center gap-1">
-        <span style={{ color: "#f87171" }}>✕ 2</span>
-        <span style={{ marginLeft: "6px", color: "#fbbf24" }}>⚠ 7</span>
-        <span style={{ marginLeft: "6px", color: "var(--unity-text-secondary)" }}>ℹ 3</span>
+        <span style={{ color: "#f87171" }}>✕ {errorCount}</span>
+        <span style={{ marginLeft: "6px", color: "#fbbf24" }}>⚠ {warningCount}</span>
+        <span style={{ marginLeft: "6px", color: "var(--unity-text-secondary)" }}>ℹ {infoCount}</span>
       </div>
       <div style={{ width: "1px", height: "10px", background: "var(--unity-border)" }} />
       <span>Unity 6.5.0f1</span>
