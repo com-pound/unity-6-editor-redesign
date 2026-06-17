@@ -1,0 +1,244 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 13px;
+  --background: #f0f0f2;
+  --foreground: #1a1a1e;
+  --card: #ffffff;
+  --card-foreground: #1a1a1e;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1e;
+  --primary: #4FC3F7;
+  --primary-foreground: #0a0a0c;
+  --secondary: #e5e5ea;
+  --secondary-foreground: #1a1a1e;
+  --muted: #e0e0e5;
+  --muted-foreground: #6e6e80;
+  --accent: #4FC3F7;
+  --accent-foreground: #0a0a0c;
+  --destructive: #f87171;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --input: transparent;
+  --input-background: #e8e8ed;
+  --switch-background: #c0c0cc;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #4FC3F7;
+  --chart-1: #4FC3F7;
+  --chart-2: #34d399;
+  --chart-3: #fbbf24;
+  --chart-4: #a78bfa;
+  --chart-5: #f87171;
+  --radius: 0.625rem;
+  --sidebar: #f5f5f7;
+  --sidebar-foreground: #1a1a1e;
+  --sidebar-primary: #4FC3F7;
+  --sidebar-primary-foreground: #0a0a0c;
+  --sidebar-accent: #e5e5ea;
+  --sidebar-accent-foreground: #1a1a1e;
+  --sidebar-border: rgba(0, 0, 0, 0.08);
+  --sidebar-ring: #4FC3F7;
+  /* Unity design tokens */
+  --unity-bg-base: #f0f0f2;
+  --unity-bg-panel: #ffffff;
+  --unity-bg-surface: #f5f5f7;
+  --unity-bg-elevated: #e8e8ed;
+  --unity-border: rgba(0,0,0,0.08);
+  --unity-accent: #4FC3F7;
+  --unity-text-primary: #1a1a1e;
+  --unity-text-secondary: #6e6e80;
+  --unity-prefab: #0077cc;
+  --unity-camera: #3b82f6;
+  --unity-light: #f59e0b;
+  --unity-terrain: #22c55e;
+  --unity-ui: #a855f7;
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.dark {
+  --background: #0d0d0f;
+  --foreground: #f0f0f2;
+  --card: #141416;
+  --card-foreground: #f0f0f2;
+  --popover: #1c1c1f;
+  --popover-foreground: #f0f0f2;
+  --primary: #4FC3F7;
+  --primary-foreground: #0a0a0c;
+  --secondary: #1c1c1f;
+  --secondary-foreground: #f0f0f2;
+  --muted: #1c1c1f;
+  --muted-foreground: #8888a0;
+  --accent: #4FC3F7;
+  --accent-foreground: #0a0a0c;
+  --destructive: #f87171;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255,255,255,0.07);
+  --input: #1c1c1f;
+  --input-background: #1c1c1f;
+  --switch-background: #3a3a44;
+  --ring: #4FC3F7;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: #4FC3F7;
+  --chart-2: #34d399;
+  --chart-3: #fbbf24;
+  --chart-4: #a78bfa;
+  --chart-5: #f87171;
+  --sidebar: #141416;
+  --sidebar-foreground: #f0f0f2;
+  --sidebar-primary: #4FC3F7;
+  --sidebar-primary-foreground: #0a0a0c;
+  --sidebar-accent: #1c1c1f;
+  --sidebar-accent-foreground: #f0f0f2;
+  --sidebar-border: rgba(255,255,255,0.06);
+  --sidebar-ring: #4FC3F7;
+  /* Unity dark tokens */
+  --unity-bg-base: #0d0d0f;
+  --unity-bg-panel: #141416;
+  --unity-bg-surface: #1c1c1f;
+  --unity-bg-elevated: #242428;
+  --unity-border: rgba(255,255,255,0.07);
+  --unity-accent: #4FC3F7;
+  --unity-text-primary: #f0f0f2;
+  --unity-text-secondary: #8888a0;
+  --unity-prefab: #7dd3fc;
+  --unity-camera: #60a5fa;
+  --unity-light: #fbbf24;
+  --unity-terrain: #4ade80;
+  --unity-ui: #c084fc;
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.oled-dark {
+  --background: #000000;
+  --foreground: #f0f0f2;
+  --card: #0a0a0a;
+  --card-foreground: #f0f0f2;
+  --popover: #111113;
+  --popover-foreground: #f0f0f2;
+  --primary: #4FC3F7;
+  --primary-foreground: #000000;
+  --secondary: #111113;
+  --secondary-foreground: #f0f0f2;
+  --muted: #111113;
+  --muted-foreground: #7070888;
+  --accent: #4FC3F7;
+  --accent-foreground: #000000;
+  --destructive: #f87171;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255,255,255,0.05);
+  --input: #111113;
+  --input-background: #111113;
+  --switch-background: #2a2a30;
+  --ring: #4FC3F7;
+  --unity-bg-base: #000000;
+  --unity-bg-panel: #0a0a0a;
+  --unity-bg-surface: #111113;
+  --unity-bg-elevated: #1a1a1e;
+  --unity-border: rgba(255,255,255,0.05);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /**
+  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
+  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
+  */
+
+  html {
+    font-size: var(--font-size);
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h4 {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  label {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  input {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
+}

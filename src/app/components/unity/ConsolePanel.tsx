@@ -1,0 +1,296 @@
+import { useState } from "react";
+import {
+  Search, XCircle, AlertTriangle, Info, Trash2,
+  ChevronDown, ChevronRight, Sparkles, Filter, X
+} from "lucide-react";
+
+type Severity = "error" | "warning" | "info";
+
+interface LogEntry {
+  id: string;
+  severity: Severity;
+  message: string;
+  source: string;
+  count: number;
+  stack?: string[];
+  timestamp: string;
+}
+
+const logs: LogEntry[] = [
+  {
+    id: "e1", severity: "error", count: 3,
+    message: "NullReferenceException: Object reference not set to an instance of an object",
+    source: "PlayerController.cs:142", timestamp: "12:34:01",
+    stack: [
+      "PlayerController.Update () (at Assets/Scripts/PlayerController.cs:142)",
+      "UnityEngine.InputSystem.InputAction+CallbackContext.ReadValue[TValue] ()",
+      "UnityEngine.EventSystems.EventSystem:Update()",
+    ],
+  },
+  {
+    id: "w1", severity: "warning", count: 1,
+    message: "Shader 'Hidden/BlitAdd' has been replaced by 'Hidden/BlitCopy'",
+    source: "Terrain.cs:38", timestamp: "12:33:55",
+    stack: ["UnityEngine.Shader:Find(String)"],
+  },
+  {
+    id: "i1", severity: "info", count: 1,
+    message: "Successfully baked lightmap for scene 'SampleScene' — 2.4 seconds",
+    source: "LightBaking.cs:77", timestamp: "12:33:40",
+  },
+  {
+    id: "e2", severity: "error", count: 1,
+    message: "IndexOutOfRangeException: Index was outside the bounds of the array",
+    source: "EnemyAI.cs:89", timestamp: "12:33:20",
+    stack: [
+      "EnemyAI.FindTarget () (at Assets/Scripts/EnemyAI.cs:89)",
+      "EnemyAI.Update () (at Assets/Scripts/EnemyAI.cs:56)",
+    ],
+  },
+  {
+    id: "w2", severity: "warning", count: 4,
+    message: "Assets/Visual Assets/Terrain/Rock_Normal.png: Texture compression may not be optimal for this platform",
+    source: "TextureImporter:0", timestamp: "12:32:58",
+  },
+  {
+    id: "i2", severity: "info", count: 1,
+    message: "Compilation completed in 0.84s — 0 errors, 0 warnings",
+    source: "EditorCompiler:0", timestamp: "12:32:44",
+  },
+  {
+    id: "w3", severity: "warning", count: 2,
+    message: "PerformanceBudget: Draw call count (312) exceeded recommended limit (256)",
+    source: "RenderPipeline:0", timestamp: "12:32:31",
+  },
+  {
+    id: "i3", severity: "info", count: 1,
+    message: "Physics simulation resumed — fixed timestep: 0.02s",
+    source: "PhysicsManager:0", timestamp: "12:32:10",
+  },
+];
+
+const severityColor: Record<Severity, string> = {
+  error: "var(--unity-error, #f87171)",
+  warning: "#fbbf24",
+  info: "var(--unity-text-secondary)",
+};
+
+const SeverityIcon = ({ severity }: { severity: Severity }) => {
+  const props = { size: 11, color: severityColor[severity] };
+  switch (severity) {
+    case "error": return <XCircle {...props} />;
+    case "warning": return <AlertTriangle {...props} />;
+    default: return <Info {...props} />;
+  }
+};
+
+export function ConsolePanel() {
+  const [filter, setFilter] = useState<Set<Severity>>(new Set(["error", "warning", "info"]));
+  const [search, setSearch] = useState("");
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [selected, setSelected] = useState<string | null>("e1");
+  const [aiExplaining, setAiExplaining] = useState<string | null>(null);
+
+  const toggleFilter = (s: Severity) => {
+    const next = new Set(filter);
+    if (next.has(s)) next.delete(s); else next.add(s);
+    setFilter(next);
+  };
+
+  const toggleExpand = (id: string) => {
+    const next = new Set(expanded);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    setExpanded(next);
+  };
+
+  const filtered = logs.filter(
+    (l) => filter.has(l.severity) && (!search || l.message.toLowerCase().includes(search.toLowerCase()) || l.source.toLowerCase().includes(search.toLowerCase()))
+  );
+
+  const counts = { error: logs.filter((l) => l.severity === "error").reduce((a, b) => a + b.count, 0), warning: logs.filter((l) => l.severity === "warning").reduce((a, b) => a + b.count, 0), info: logs.filter((l) => l.severity === "info").reduce((a, b) => a + b.count, 0) };
+
+  return (
+    <div className="flex flex-col h-full" style={{ background: "var(--unity-bg-panel)" }}>
+      {/* Header */}
+      <div
+        className="flex items-center gap-2 px-2 h-8 shrink-0"
+        style={{ borderBottom: "1px solid var(--unity-border)", background: "var(--unity-bg-surface)" }}
+      >
+        <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--unity-text-primary)", fontFamily: "var(--font-family)", letterSpacing: "0.04em", textTransform: "uppercase" }}>
+          Console
+        </span>
+
+        <div style={{ width: "1px", height: "14px", background: "var(--unity-border)" }} />
+
+        {/* Severity filters */}
+        {([["error", counts.error, XCircle], ["warning", counts.warning, AlertTriangle], ["info", counts.info, Info]] as [Severity, number, any][]).map(([s, c, Icon]) => (
+          <button
+            key={s}
+            onClick={() => toggleFilter(s)}
+            className="flex items-center gap-1 px-2 h-5 rounded-md transition-all"
+            style={{
+              background: filter.has(s) ? (s === "error" ? "rgba(248,113,113,0.12)" : s === "warning" ? "rgba(251,191,36,0.12)" : "rgba(136,136,160,0.12)") : "transparent",
+              border: `1px solid ${filter.has(s) ? severityColor[s] : "var(--unity-border)"}`,
+              color: filter.has(s) ? severityColor[s] : "var(--unity-text-secondary)",
+              opacity: filter.has(s) ? 1 : 0.45,
+            }}
+          >
+            <Icon size={10} />
+            <span style={{ fontSize: "10px", fontFamily: "var(--font-family)", fontWeight: 600 }}>{c}</span>
+          </button>
+        ))}
+
+        <div className="flex-1" />
+
+        {/* Search */}
+        <div
+          className="flex items-center gap-1 px-2 h-5 rounded-md"
+          style={{ background: "var(--unity-bg-elevated)", border: "1px solid var(--unity-border)", minWidth: "140px" }}
+        >
+          <Search size={9} style={{ color: "var(--unity-text-secondary)" }} />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Filter logs..."
+            className="flex-1 bg-transparent outline-none"
+            style={{ fontSize: "10px", color: "var(--unity-text-primary)", fontFamily: "var(--font-family)" }}
+          />
+          {search && (
+            <button onClick={() => setSearch("")}>
+              <X size={8} style={{ color: "var(--unity-text-secondary)" }} />
+            </button>
+          )}
+        </div>
+
+        <button className="w-6 h-6 flex items-center justify-center rounded-md" style={{ color: "var(--unity-text-secondary)" }} title="Clear">
+          <Trash2 size={11} />
+        </button>
+      </div>
+
+      {/* Log list */}
+      <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: "none" }}>
+        {filtered.map((log) => {
+          const isSelected = selected === log.id;
+          const isExpanded = expanded.has(log.id);
+          const isAI = aiExplaining === log.id;
+
+          return (
+            <div key={log.id} style={{ borderBottom: "1px solid var(--unity-border)" }}>
+              <div
+                className="flex items-start gap-2 px-3 py-1.5 cursor-pointer transition-all"
+                style={{
+                  background: isSelected ? (log.severity === "error" ? "rgba(248,113,113,0.08)" : log.severity === "warning" ? "rgba(251,191,36,0.06)" : "var(--unity-bg-elevated)") : "transparent",
+                  borderLeft: isSelected ? `2px solid ${severityColor[log.severity]}` : "2px solid transparent",
+                }}
+                onClick={() => setSelected(log.id)}
+              >
+                <div className="mt-0.5 shrink-0">
+                  <SeverityIcon severity={log.severity} />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start gap-1.5">
+                    <span
+                      className="flex-1 truncate"
+                      style={{
+                        fontSize: "11px",
+                        fontFamily: "var(--font-mono)",
+                        color: log.severity === "error" ? "#f87171" : log.severity === "warning" ? "#fbbf24" : "var(--unity-text-primary)",
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {log.message}
+                    </span>
+                    {log.count > 1 && (
+                      <span
+                        className="shrink-0 px-1.5 py-0 rounded-full"
+                        style={{
+                          fontSize: "9px",
+                          fontFamily: "var(--font-mono)",
+                          background: log.severity === "error" ? "rgba(248,113,113,0.2)" : "rgba(251,191,36,0.2)",
+                          color: severityColor[log.severity],
+                          fontWeight: 700,
+                        }}
+                      >
+                        ×{log.count}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span style={{ fontSize: "10px", color: "var(--unity-text-secondary)", fontFamily: "var(--font-mono)" }}>
+                      {log.source}
+                    </span>
+                    <span style={{ fontSize: "9px", color: "var(--unity-text-secondary)", fontFamily: "var(--font-mono)", opacity: 0.5 }}>
+                      {log.timestamp}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1 shrink-0 mt-0.5">
+                  {log.severity === "error" && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setAiExplaining(isAI ? null : log.id); }}
+                      className="flex items-center gap-1 px-1.5 h-5 rounded-md transition-all"
+                      style={{
+                        background: isAI ? "rgba(79,195,247,0.15)" : "transparent",
+                        border: `1px solid ${isAI ? "var(--unity-accent)" : "var(--unity-border)"}`,
+                        color: isAI ? "var(--unity-accent)" : "var(--unity-text-secondary)",
+                        fontSize: "9px",
+                        fontFamily: "var(--font-family)",
+                      }}
+                    >
+                      <Sparkles size={8} />
+                      AI
+                    </button>
+                  )}
+                  {log.stack && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); toggleExpand(log.id); }}
+                      style={{ color: "var(--unity-text-secondary)" }}
+                    >
+                      {isExpanded ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* AI explanation */}
+              {isAI && (
+                <div className="px-3 pb-2" style={{ borderBottom: "1px solid var(--unity-border)" }}>
+                  <div
+                    className="p-2.5 rounded-[8px]"
+                    style={{ background: "rgba(79,195,247,0.06)", border: "1px solid rgba(79,195,247,0.2)" }}
+                  >
+                    <div className="flex items-center gap-1.5 mb-1.5">
+                      <Sparkles size={10} style={{ color: "var(--unity-accent)" }} />
+                      <span style={{ fontSize: "10px", fontWeight: 600, color: "var(--unity-accent)", fontFamily: "var(--font-family)" }}>AI Explanation</span>
+                    </div>
+                    <p style={{ fontSize: "10px", color: "var(--unity-text-primary)", fontFamily: "var(--font-family)", lineHeight: 1.6 }}>
+                      This error occurs at line 142 of <code style={{ fontFamily: "var(--font-mono)", color: "var(--unity-accent)", fontSize: "9px" }}>PlayerController.cs</code> because an object reference is being accessed without first checking for null. This commonly happens when a component is missing from the GameObject, or when <code style={{ fontFamily: "var(--font-mono)", color: "var(--unity-accent)", fontSize: "9px" }}>GetComponent&lt;&gt;()</code> returns null.
+                    </p>
+                    <p className="mt-1.5" style={{ fontSize: "10px", color: "var(--unity-text-secondary)", fontFamily: "var(--font-family)", lineHeight: 1.5 }}>
+                      <strong style={{ color: "var(--unity-text-primary)" }}>Fix:</strong> Add a null check before accessing the reference, or use <code style={{ fontFamily: "var(--font-mono)", color: "#4ade80", fontSize: "9px" }}>RequireComponent</code> attribute.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Stack trace */}
+              {isExpanded && log.stack && (
+                <div className="pb-1.5 px-3">
+                  {log.stack.map((line, i) => (
+                    <div key={i} className="py-0.5" style={{ paddingLeft: "16px" }}>
+                      <span style={{ fontSize: "10px", color: "var(--unity-text-secondary)", fontFamily: "var(--font-mono)" }}>
+                        {line}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
