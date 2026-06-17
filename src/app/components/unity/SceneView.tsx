@@ -23,45 +23,47 @@ export function SceneView({ isPlaying = false }: SceneViewProps) {
   ];
 
   return (
-    <div className="flex flex-col h-full overflow-hidden" style={{ background: "#1a1a1c" }}>
+    <div className="flex flex-col h-full overflow-hidden" style={{ background: "#101012" }}>
       {/* Tab Bar */}
       <div
-        className="flex items-center h-8 px-2 gap-1 shrink-0"
+        className="flex items-center h-9 px-2 gap-1 shrink-0"
         style={{ background: "var(--unity-bg-surface)", borderBottom: "1px solid var(--unity-border)" }}
       >
-        {(["scene", "game"] as const).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className="px-3 h-6 rounded-md transition-all"
-            style={{
-              fontSize: "11px",
-              fontFamily: "var(--font-family)",
-              fontWeight: activeTab === tab ? 600 : 400,
-              background: activeTab === tab ? "var(--unity-bg-elevated)" : "transparent",
-              color: activeTab === tab ? "var(--unity-accent)" : "var(--unity-text-secondary)",
-              border: activeTab === tab ? "1px solid var(--unity-border)" : "1px solid transparent",
-              textTransform: "capitalize",
-            }}
-          >
-            {tab === "scene" ? "Scene*" : "Game"}
-          </button>
-        ))}
+        <div className="flex items-center gap-0.5 p-0.5 rounded-lg" style={{ background: "var(--unity-bg-elevated)" }}>
+          {(["scene", "game"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className="px-3 h-6 rounded-md unity-press"
+              style={{
+                fontSize: "11px",
+                fontFamily: "var(--font-family)",
+                fontWeight: activeTab === tab ? 600 : 400,
+                background: activeTab === tab ? "var(--unity-bg-panel)" : "transparent",
+                color: activeTab === tab ? "var(--unity-text-primary)" : "var(--unity-text-secondary)",
+                boxShadow: activeTab === tab ? "var(--unity-shadow)" : "none",
+                textTransform: "capitalize",
+              }}
+            >
+              {tab === "scene" ? "Scene" : "Game"}
+            </button>
+          ))}
+        </div>
 
         <div className="flex-1" />
 
         {/* Scene Controls */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           {[
-            { label: "Shaded", icon: <Layers size={10} /> },
+            { label: "Shaded", icon: <Layers size={11} /> },
             { label: "2D", icon: null },
-            { label: "Lighting", icon: <Sun size={10} /> },
+            { label: "Lighting", icon: <Sun size={11} /> },
             { label: "Audio", icon: null },
             { label: "FX", icon: null },
           ].map((ctrl) => (
             <button
               key={ctrl.label}
-              className="flex items-center gap-1 px-2 h-6 rounded-md transition-all"
+              className="flex items-center gap-1 px-2 h-7 rounded-lg unity-press"
               style={{
                 fontSize: "10px",
                 fontFamily: "var(--font-family)",
@@ -69,28 +71,28 @@ export function SceneView({ isPlaying = false }: SceneViewProps) {
                 background: "transparent",
                 border: "none",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--unity-bg-elevated)")}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--unity-bg-hover)")}
               onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
             >
               {ctrl.icon}
               {ctrl.label}
-              <ChevronDown size={8} />
+              <ChevronDown size={9} />
             </button>
           ))}
 
           <button
             onClick={() => setShowStats(!showStats)}
-            className="flex items-center gap-1 px-2 h-6 rounded-md transition-all"
+            className="flex items-center gap-1 px-2 h-7 rounded-lg unity-press"
             style={{
               fontSize: "10px",
               color: showStats ? "var(--unity-accent)" : "var(--unity-text-secondary)",
-              background: showStats ? "rgba(79,195,247,0.1)" : "transparent",
+              background: showStats ? "var(--unity-accent-soft)" : "transparent",
               fontFamily: "var(--font-family)",
             }}
           >
-            <Grid3x3 size={10} />
+            <Grid3x3 size={11} />
             Gizmos
-            <ChevronDown size={8} />
+            <ChevronDown size={9} />
           </button>
         </div>
       </div>
@@ -161,6 +163,38 @@ export function SceneView({ isPlaying = false }: SceneViewProps) {
           </svg>
         </div>
 
+        {/* Top-center context toolbar */}
+        <div
+          className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-1 px-1.5 py-1 rounded-xl unity-fade-in"
+          style={{ background: "rgba(16,16,18,0.7)", border: "1px solid var(--unity-border-strong)", backdropFilter: "blur(16px)", boxShadow: "var(--unity-shadow-lg)" }}
+        >
+          {[
+            { icon: <Sun size={13} />, label: "Lighting", active: true },
+            { icon: <Layers size={13} />, label: "Render" },
+            { icon: <Grid3x3 size={13} />, label: "Grid" },
+          ].map((item) => (
+            <button
+              key={item.label}
+              className="flex items-center gap-1.5 px-2.5 h-7 rounded-lg unity-press"
+              style={{
+                fontSize: "10px",
+                fontFamily: "var(--font-family)",
+                color: item.active ? "var(--unity-accent)" : "var(--unity-text-secondary)",
+                background: item.active ? "var(--unity-accent-soft)" : "transparent",
+              }}
+            >
+              {item.icon}
+              {item.label}
+            </button>
+          ))}
+          <div style={{ width: "1px", height: "16px", background: "var(--unity-border)", margin: "0 2px" }} />
+          <button className="flex items-center gap-1.5 px-2.5 h-7 rounded-lg unity-press" style={{ fontSize: "10px", fontFamily: "var(--font-family)", color: "var(--unity-text-secondary)" }}>
+            <Camera size={13} />
+            Presets
+            <ChevronDown size={9} />
+          </button>
+        </div>
+
         {/* Play mode overlay */}
         {isPlaying && (
           <div className="absolute inset-0 pointer-events-none" style={{ border: "2px solid var(--unity-accent)", boxShadow: "inset 0 0 30px rgba(79,195,247,0.08)" }}>
@@ -173,54 +207,80 @@ export function SceneView({ isPlaying = false }: SceneViewProps) {
 
         {/* Left tool sidebar */}
         <div
-          className="absolute left-2 top-1/2 -translate-y-1/2 flex flex-col gap-1 p-1 rounded-[10px]"
-          style={{ background: "rgba(20,20,22,0.85)", border: "1px solid var(--unity-border)", backdropFilter: "blur(12px)" }}
+          className="absolute left-3 top-1/2 -translate-y-1/2 flex flex-col gap-1 p-1.5 rounded-2xl"
+          style={{ background: "rgba(16,16,18,0.7)", border: "1px solid var(--unity-border-strong)", backdropFilter: "blur(16px)", boxShadow: "var(--unity-shadow-lg)" }}
         >
           {tools.map((tool) => (
             <button
               key={tool.id}
               onClick={() => setActiveTool(tool.id)}
               title={tool.title}
-              className="w-7 h-7 rounded-lg flex items-center justify-center transition-all"
+              className="w-8 h-8 rounded-xl flex items-center justify-center unity-press"
               style={{
                 background: activeTool === tool.id ? "var(--unity-accent)" : "transparent",
-                color: activeTool === tool.id ? "#0a0a0c" : "var(--unity-text-secondary)",
+                color: activeTool === tool.id ? "var(--unity-accent-foreground)" : "var(--unity-text-secondary)",
+                boxShadow: activeTool === tool.id ? "0 0 12px var(--unity-accent-glow)" : "none",
               }}
             >
               {tool.icon}
             </button>
           ))}
-          <div style={{ height: "1px", background: "var(--unity-border)", margin: "2px 0" }} />
-          <button className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ color: "var(--unity-text-secondary)" }} title="Camera">
-            <Camera size={13} />
+          <div style={{ height: "1px", background: "var(--unity-border)", margin: "2px 4px" }} />
+          <button className="w-8 h-8 rounded-xl flex items-center justify-center unity-press" style={{ color: "var(--unity-text-secondary)" }} title="Camera">
+            <Camera size={14} />
           </button>
-          <button className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ color: "var(--unity-text-secondary)" }} title="Zoom In">
-            <ZoomIn size={13} />
+          <button className="w-8 h-8 rounded-xl flex items-center justify-center unity-press" style={{ color: "var(--unity-text-secondary)" }} title="Zoom In">
+            <ZoomIn size={14} />
           </button>
-          <button className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ color: "var(--unity-text-secondary)" }} title="Zoom Out">
-            <ZoomOut size={13} />
+          <button className="w-8 h-8 rounded-xl flex items-center justify-center unity-press" style={{ color: "var(--unity-text-secondary)" }} title="Zoom Out">
+            <ZoomOut size={14} />
           </button>
         </div>
 
-        {/* Stats overlay */}
+        {/* Stats overlay — performance HUD */}
         {showStats && (
           <div
-            className="absolute top-2 right-2 p-2.5 rounded-[10px]"
-            style={{ background: "rgba(13,13,15,0.82)", border: "1px solid var(--unity-border)", backdropFilter: "blur(12px)", minWidth: "150px" }}
+            className="absolute top-3 right-3 p-3 rounded-2xl unity-fade-in"
+            style={{ background: "rgba(10,10,12,0.72)", border: "1px solid var(--unity-border-strong)", backdropFilter: "blur(16px)", minWidth: "186px", boxShadow: "var(--unity-shadow-lg)" }}
           >
-            <div className="mb-1.5" style={{ fontSize: "9px", fontWeight: 700, color: "var(--unity-text-secondary)", fontFamily: "var(--font-mono)", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-              Statistics
+            <div className="flex items-center justify-between mb-2">
+              <span style={{ fontSize: "9px", fontWeight: 700, color: "var(--unity-text-secondary)", fontFamily: "var(--font-mono)", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                Performance
+              </span>
+              <span className="flex items-center gap-1" style={{ fontSize: "9px", color: "var(--unity-terrain)", fontFamily: "var(--font-mono)" }}>
+                <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--unity-terrain)" }} />
+                Stable
+              </span>
             </div>
+            {/* FPS hero */}
+            <div className="flex items-baseline gap-1.5 mb-2">
+              <span style={{ fontSize: "26px", fontWeight: 700, color: "var(--unity-text-primary)", fontFamily: "var(--font-mono)", lineHeight: 1 }}>144</span>
+              <span style={{ fontSize: "10px", color: "var(--unity-text-secondary)", fontFamily: "var(--font-mono)" }}>FPS</span>
+              <span className="ml-auto" style={{ fontSize: "10px", color: "var(--unity-text-tertiary)", fontFamily: "var(--font-mono)" }}>6.9ms</span>
+            </div>
+            {/* Mini sparkline */}
+            <svg width="100%" height="22" viewBox="0 0 160 22" preserveAspectRatio="none" className="mb-2">
+              <polyline
+                points="0,16 16,12 32,14 48,8 64,11 80,6 96,9 112,5 128,8 144,4 160,7"
+                fill="none" stroke="var(--unity-accent)" strokeWidth="1.5" strokeLinejoin="round"
+              />
+              <polygon points="0,16 16,12 32,14 48,8 64,11 80,6 96,9 112,5 128,8 144,4 160,7 160,22 0,22" fill="var(--unity-accent-soft)" />
+            </svg>
             {[
-              { label: "FPS", value: "144" },
-              { label: "Draw Calls", value: "312" },
-              { label: "Triangles", value: "2.4M" },
-              { label: "Vertices", value: "1.8M" },
-              { label: "VRAM", value: "1.2 GB" },
+              { label: "CPU", value: "4.2ms", pct: 42, color: "var(--unity-accent)" },
+              { label: "GPU", value: "6.1ms", pct: 61, color: "#a78bfa" },
+              { label: "Draw Calls", value: "312", pct: 50, color: "var(--unity-terrain)" },
+              { label: "Tris", value: "2.4M", pct: 70, color: "var(--unity-light)" },
+              { label: "VRAM", value: "1.2 GB", pct: 35, color: "#60a5fa" },
             ].map((stat) => (
-              <div key={stat.label} className="flex justify-between items-center" style={{ marginBottom: "2px" }}>
-                <span style={{ fontSize: "10px", color: "var(--unity-text-secondary)", fontFamily: "var(--font-mono)" }}>{stat.label}</span>
-                <span style={{ fontSize: "10px", color: "var(--unity-accent)", fontFamily: "var(--font-mono)", fontWeight: 600 }}>{stat.value}</span>
+              <div key={stat.label} className="mb-1.5">
+                <div className="flex justify-between items-center" style={{ marginBottom: "3px" }}>
+                  <span style={{ fontSize: "10px", color: "var(--unity-text-secondary)", fontFamily: "var(--font-mono)" }}>{stat.label}</span>
+                  <span style={{ fontSize: "10px", color: "var(--unity-text-primary)", fontFamily: "var(--font-mono)", fontWeight: 600 }}>{stat.value}</span>
+                </div>
+                <div className="h-1 rounded-full overflow-hidden" style={{ background: "var(--unity-bg-elevated)" }}>
+                  <div className="h-full rounded-full" style={{ width: `${stat.pct}%`, background: stat.color }} />
+                </div>
               </div>
             ))}
           </div>
@@ -228,21 +288,22 @@ export function SceneView({ isPlaying = false }: SceneViewProps) {
 
         {/* Camera controls (bottom-right) */}
         <div
-          className="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-1.5 rounded-[10px]"
-          style={{ background: "rgba(20,20,22,0.82)", border: "1px solid var(--unity-border)", backdropFilter: "blur(12px)" }}
+          className="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-1.5 rounded-xl"
+          style={{ background: "rgba(16,16,18,0.7)", border: "1px solid var(--unity-border-strong)", backdropFilter: "blur(16px)", boxShadow: "var(--unity-shadow-lg)" }}
         >
-          {["Persp", "iso"].map((v, i) => (
+          {["Persp", "Iso"].map((v, i) => (
             <button
               key={v}
-              className="px-2 py-0.5 rounded-md transition-all"
+              className="px-2 py-0.5 rounded-md unity-press"
               style={{
                 fontSize: "10px",
                 fontFamily: "var(--font-family)",
-                background: i === 0 ? "var(--unity-bg-elevated)" : "transparent",
-                color: i === 0 ? "var(--unity-text-primary)" : "var(--unity-text-secondary)",
+                fontWeight: i === 0 ? 600 : 400,
+                background: i === 0 ? "var(--unity-accent-soft)" : "transparent",
+                color: i === 0 ? "var(--unity-accent)" : "var(--unity-text-secondary)",
               }}
             >
-              {v.charAt(0).toUpperCase() + v.slice(1)}
+              {v}
             </button>
           ))}
           <div style={{ width: "1px", height: "14px", background: "var(--unity-border)" }} />
@@ -251,11 +312,12 @@ export function SceneView({ isPlaying = false }: SceneViewProps) {
 
         {/* Snapping overlay */}
         <div
-          className="absolute bottom-3 left-10 flex items-center gap-1 px-2 py-1.5 rounded-[10px]"
-          style={{ background: "rgba(20,20,22,0.82)", border: "1px solid var(--unity-border)", backdropFilter: "blur(12px)" }}
+          className="absolute bottom-3 left-14 flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl"
+          style={{ background: "rgba(16,16,18,0.7)", border: "1px solid var(--unity-border-strong)", backdropFilter: "blur(16px)", boxShadow: "var(--unity-shadow-lg)" }}
         >
-          <Grid3x3 size={10} style={{ color: "var(--unity-text-secondary)" }} />
-          <span style={{ fontSize: "10px", color: "var(--unity-text-secondary)", fontFamily: "var(--font-family)" }}>Snap: 1m</span>
+          <Grid3x3 size={11} style={{ color: "var(--unity-accent)" }} />
+          <span style={{ fontSize: "10px", color: "var(--unity-text-secondary)", fontFamily: "var(--font-family)" }}>Snap</span>
+          <span style={{ fontSize: "10px", color: "var(--unity-text-primary)", fontFamily: "var(--font-mono)", fontWeight: 600 }}>1m</span>
         </div>
       </div>
     </div>

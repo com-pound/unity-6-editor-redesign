@@ -38,3 +38,24 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="range"]::-webkit-slider-runnable-track {
   background: transparent;
 }
+
+/* Premium motion + interaction polish */
+@keyframes unity-fade-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes unity-slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes unity-expand {
+  from { opacity: 0; max-height: 0; }
+  to { opacity: 1; max-height: 1200px; }
+}
+.unity-fade-in { animation: unity-fade-in 0.16s cubic-bezier(0.16, 1, 0.3, 1); }
+.unity-slide-up { animation: unity-slide-up 0.22s cubic-bezier(0.16, 1, 0.3, 1); }
+.unity-expand { animation: unity-expand 0.2s ease; overflow: hidden; }
+
+/* Subtle press feedback on interactive controls */
+.unity-press { transition: transform 0.08s ease, background 0.14s ease, color 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease; }
+.unity-press:active { transform: scale(0.94); }

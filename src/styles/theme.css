@@ -40,14 +40,21 @@
   --sidebar-border: rgba(0, 0, 0, 0.08);
   --sidebar-ring: #4FC3F7;
   /* Unity design tokens */
-  --unity-bg-base: #f0f0f2;
+  --unity-bg-base: #e8e8ec;
   --unity-bg-panel: #ffffff;
-  --unity-bg-surface: #f5f5f7;
-  --unity-bg-elevated: #e8e8ed;
-  --unity-border: rgba(0,0,0,0.08);
-  --unity-accent: #4FC3F7;
+  --unity-bg-surface: #f6f6f8;
+  --unity-bg-elevated: #ececf0;
+  --unity-bg-hover: rgba(0,0,0,0.04);
+  --unity-border: rgba(0,0,0,0.09);
+  --unity-border-strong: rgba(0,0,0,0.16);
+  --unity-accent: #0e9fe6;
+  --unity-accent-soft: rgba(14,159,230,0.12);
+  --unity-accent-glow: rgba(14,159,230,0.3);
   --unity-text-primary: #1a1a1e;
   --unity-text-secondary: #6e6e80;
+  --unity-text-tertiary: #9a9aac;
+  --unity-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+  --unity-shadow-lg: 0 8px 40px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08);
   --unity-prefab: #0077cc;
   --unity-camera: #3b82f6;
   --unity-light: #f59e0b;
@@ -58,25 +65,25 @@
 }
 
 .dark {
-  --background: #0d0d0f;
-  --foreground: #f0f0f2;
-  --card: #141416;
-  --card-foreground: #f0f0f2;
-  --popover: #1c1c1f;
-  --popover-foreground: #f0f0f2;
+  --background: #0a0a0c;
+  --foreground: #eef0f4;
+  --card: #161619;
+  --card-foreground: #eef0f4;
+  --popover: #1a1a1e;
+  --popover-foreground: #eef0f4;
   --primary: #4FC3F7;
-  --primary-foreground: #0a0a0c;
-  --secondary: #1c1c1f;
-  --secondary-foreground: #f0f0f2;
-  --muted: #1c1c1f;
-  --muted-foreground: #8888a0;
+  --primary-foreground: #06080c;
+  --secondary: #1c1c20;
+  --secondary-foreground: #eef0f4;
+  --muted: #1c1c20;
+  --muted-foreground: #8a8a9c;
   --accent: #4FC3F7;
-  --accent-foreground: #0a0a0c;
+  --accent-foreground: #06080c;
   --destructive: #f87171;
   --destructive-foreground: #ffffff;
-  --border: rgba(255,255,255,0.07);
-  --input: #1c1c1f;
-  --input-background: #1c1c1f;
+  --border: rgba(255,255,255,0.08);
+  --input: #1c1c20;
+  --input-background: #1c1c20;
   --switch-background: #3a3a44;
   --ring: #4FC3F7;
   --font-weight-medium: 500;
@@ -86,28 +93,35 @@
   --chart-3: #fbbf24;
   --chart-4: #a78bfa;
   --chart-5: #f87171;
-  --sidebar: #141416;
-  --sidebar-foreground: #f0f0f2;
+  --sidebar: #161619;
+  --sidebar-foreground: #eef0f4;
   --sidebar-primary: #4FC3F7;
-  --sidebar-primary-foreground: #0a0a0c;
-  --sidebar-accent: #1c1c1f;
-  --sidebar-accent-foreground: #f0f0f2;
+  --sidebar-primary-foreground: #06080c;
+  --sidebar-accent: #1c1c20;
+  --sidebar-accent-foreground: #eef0f4;
   --sidebar-border: rgba(255,255,255,0.06);
   --sidebar-ring: #4FC3F7;
-  /* Unity dark tokens */
-  --unity-bg-base: #0d0d0f;
-  --unity-bg-panel: #141416;
-  --unity-bg-surface: #1c1c1f;
-  --unity-bg-elevated: #242428;
-  --unity-border: rgba(255,255,255,0.07);
+  /* Unity dark tokens — layered surface system */
+  --unity-bg-base: #0a0a0c;
+  --unity-bg-panel: #131316;
+  --unity-bg-surface: #1a1a1e;
+  --unity-bg-elevated: #242429;
+  --unity-bg-hover: rgba(255,255,255,0.05);
+  --unity-border: rgba(255,255,255,0.08);
+  --unity-border-strong: rgba(255,255,255,0.14);
   --unity-accent: #4FC3F7;
-  --unity-text-primary: #f0f0f2;
-  --unity-text-secondary: #8888a0;
+  --unity-accent-soft: rgba(79,195,247,0.12);
+  --unity-accent-glow: rgba(79,195,247,0.35);
+  --unity-text-primary: #eef0f4;
+  --unity-text-secondary: #9a9aac;
+  --unity-text-tertiary: #6a6a7c;
   --unity-prefab: #7dd3fc;
   --unity-camera: #60a5fa;
   --unity-light: #fbbf24;
   --unity-terrain: #4ade80;
   --unity-ui: #c084fc;
+  --unity-shadow: 0 1px 2px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.3);
+  --unity-shadow-lg: 0 8px 40px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.4);
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
@@ -135,10 +149,15 @@
   --switch-background: #2a2a30;
   --ring: #4FC3F7;
   --unity-bg-base: #000000;
-  --unity-bg-panel: #0a0a0a;
-  --unity-bg-surface: #111113;
-  --unity-bg-elevated: #1a1a1e;
-  --unity-border: rgba(255,255,255,0.05);
+  --unity-bg-panel: #0b0b0d;
+  --unity-bg-surface: #121214;
+  --unity-bg-elevated: #1c1c20;
+  --unity-bg-hover: rgba(255,255,255,0.04);
+  --unity-border: rgba(255,255,255,0.06);
+  --unity-border-strong: rgba(255,255,255,0.12);
+  --unity-text-tertiary: #5a5a6c;
+  --unity-shadow: 0 1px 2px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.5);
+  --unity-shadow-lg: 0 8px 40px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.5);
 }
 
 @theme inline {
