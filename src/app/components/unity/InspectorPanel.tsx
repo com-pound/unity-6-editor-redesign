@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   ChevronDown, ChevronRight, MoreHorizontal, Mountain,
-  Layers, Box, Settings, Plus, Minus, RefreshCw
+  Box, Settings, Plus, RefreshCw, Sparkles, BookOpen, Search, Copy, Trash2
 } from "lucide-react";
 
 interface ComponentCardProps {
@@ -16,62 +16,132 @@ interface ComponentCardProps {
 function ComponentCard({ icon, title, enabled = true, accent = "var(--unity-accent)", children, defaultOpen = true }: ComponentCardProps) {
   const [open, setOpen] = useState(defaultOpen);
   const [isEnabled, setIsEnabled] = useState(enabled);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [aiOpen, setAiOpen] = useState(false);
 
   return (
     <div
-      className="rounded-[10px] overflow-hidden mb-2"
+      className="rounded-xl overflow-hidden mb-2 group/card"
       style={{
         background: "var(--unity-bg-surface)",
         border: "1px solid var(--unity-border)",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.15)",
+        boxShadow: "var(--unity-shadow)",
       }}
     >
       {/* Card Header */}
       <div
-        className="flex items-center gap-2 px-3 h-9 cursor-pointer transition-all"
+        className="flex items-center gap-2 px-2.5 h-10 cursor-pointer transition-all"
         style={{
-          background: open ? "var(--unity-bg-surface)" : "var(--unity-bg-surface)",
           borderBottom: open ? "1px solid var(--unity-border)" : "none",
         }}
         onClick={() => setOpen(!open)}
       >
-        <div className="flex items-center justify-center w-5 h-5 rounded-md" style={{ background: "rgba(79,195,247,0.1)" }}>
+        <span style={{ color: "var(--unity-text-tertiary)", transition: "transform 0.15s" }}>
+          {open ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+        </span>
+        <div className="flex items-center justify-center w-6 h-6 rounded-lg" style={{ background: "var(--unity-accent-soft)" }}>
           <span style={{ color: accent }}>{icon}</span>
         </div>
         <span style={{ flex: 1, fontSize: "12px", fontWeight: 600, color: "var(--unity-text-primary)", fontFamily: "var(--font-family)" }}>
           {title}
         </span>
+
+        {/* Hover actions */}
+        <div className="flex items-center gap-0.5 opacity-0 group-hover/card:opacity-100 transition-opacity">
+          <button
+            onClick={(e) => { e.stopPropagation(); setAiOpen(!aiOpen); }}
+            className="w-6 h-6 flex items-center justify-center rounded-md unity-press"
+            style={{ color: aiOpen ? "var(--unity-accent)" : "var(--unity-text-secondary)", background: aiOpen ? "var(--unity-accent-soft)" : "transparent" }}
+            title="Explain with AI"
+          >
+            <Sparkles size={12} />
+          </button>
+          <button
+            onClick={(e) => e.stopPropagation()}
+            className="w-6 h-6 flex items-center justify-center rounded-md unity-press"
+            style={{ color: "var(--unity-text-secondary)" }}
+            title="Documentation"
+          >
+            <BookOpen size={12} />
+          </button>
+        </div>
+
         {/* Enable toggle */}
         <button
           onClick={(e) => { e.stopPropagation(); setIsEnabled(!isEnabled); }}
-          className="w-7 h-4 rounded-full flex items-center transition-all shrink-0"
+          className="rounded-full flex items-center transition-all shrink-0 unity-press"
           style={{
             background: isEnabled ? "var(--unity-accent)" : "var(--unity-bg-elevated)",
             padding: "2px",
-            position: "relative",
+            width: "30px",
+            height: "17px",
+            boxShadow: isEnabled ? "0 0 8px var(--unity-accent-glow)" : "none",
           }}
         >
           <div
-            className="w-3 h-3 rounded-full transition-all"
+            className="rounded-full transition-all"
             style={{
-              background: isEnabled ? "#0a0a0c" : "var(--unity-text-secondary)",
-              transform: isEnabled ? "translateX(12px)" : "translateX(0)",
+              width: "13px",
+              height: "13px",
+              background: isEnabled ? "var(--unity-accent-foreground)" : "var(--unity-text-secondary)",
+              transform: isEnabled ? "translateX(13px)" : "translateX(0)",
             }}
           />
         </button>
-        <button
-          onClick={(e) => e.stopPropagation()}
-          className="w-6 h-6 flex items-center justify-center rounded-md transition-all"
-          style={{ color: "var(--unity-text-secondary)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--unity-bg-elevated)")}
-          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-        >
-          <MoreHorizontal size={13} />
-        </button>
-        <span style={{ color: "var(--unity-text-secondary)", transition: "transform 0.15s" }}>
-          {open ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
-        </span>
+        <div className="relative">
+          <button
+            onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
+            className="w-6 h-6 flex items-center justify-center rounded-md transition-all"
+            style={{ color: "var(--unity-text-secondary)", background: menuOpen ? "var(--unity-bg-elevated)" : "transparent" }}
+          >
+            <MoreHorizontal size={13} />
+          </button>
+          {menuOpen && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={(e) => { e.stopPropagation(); setMenuOpen(false); }} />
+              <div
+                className="absolute top-full right-0 mt-1 py-1.5 rounded-xl z-50 min-w-[150px] unity-fade-in"
+                style={{ background: "var(--unity-bg-elevated)", border: "1px solid var(--unity-border-strong)", boxShadow: "var(--unity-shadow-lg)" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {[
+                  { icon: <RefreshCw size={11} />, label: "Reset" },
+                  { icon: <Copy size={11} />, label: "Copy Component" },
+                  { icon: <BookOpen size={11} />, label: "Open Reference" },
+                  { icon: <Trash2 size={11} />, label: "Remove", danger: true },
+                ].map((item) => (
+                  <button
+                    key={item.label}
+                    className="w-full flex items-center gap-2 px-3 py-1.5 transition-colors"
+                    style={{ fontSize: "11px", color: item.danger ? "var(--destructive)" : "var(--unity-text-primary)", fontFamily: "var(--font-family)" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = item.danger ? "rgba(248,113,113,0.1)" : "var(--unity-accent-soft)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {item.icon}
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
       </div>
+
+      {/* AI explanation strip */}
+      {aiOpen && open && (
+        <div className="px-2.5 pt-2.5 unity-fade-in">
+          <div className="p-2.5 rounded-lg" style={{ background: "var(--unity-accent-soft)", border: "1px solid var(--unity-accent-glow)" }}>
+            <div className="flex items-center gap-1.5 mb-1">
+              <Sparkles size={10} style={{ color: "var(--unity-accent)" }} />
+              <span style={{ fontSize: "10px", fontWeight: 600, color: "var(--unity-accent)", fontFamily: "var(--font-family)" }}>What does this do?</span>
+            </div>
+            <p style={{ fontSize: "10px", color: "var(--unity-text-secondary)", fontFamily: "var(--font-family)", lineHeight: 1.6 }}>
+              The {title} component defines how this object behaves in the scene. Adjust its properties below to control appearance and physics.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Card Body */}
       {open && isEnabled && (
@@ -242,50 +312,63 @@ export function InspectorPanel() {
     <div className="flex flex-col h-full" style={{ background: "var(--unity-bg-panel)" }}>
       {/* Header */}
       <div
-        className="flex items-center justify-between px-3 h-8 shrink-0"
+        className="flex items-center justify-between px-3 h-9 shrink-0"
         style={{ borderBottom: "1px solid var(--unity-border)", background: "var(--unity-bg-surface)" }}
       >
-        <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--unity-text-primary)", fontFamily: "var(--font-family)", letterSpacing: "0.04em", textTransform: "uppercase" }}>
+        <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--unity-text-primary)", fontFamily: "var(--font-family)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
           Inspector
         </span>
         <div className="flex items-center gap-1">
-          <button className="w-6 h-6 rounded-md flex items-center justify-center" style={{ color: "var(--unity-text-secondary)" }}>
-            <RefreshCw size={11} />
+          <button className="w-6 h-6 rounded-md flex items-center justify-center unity-press" style={{ color: "var(--unity-text-secondary)" }} title="Refresh">
+            <RefreshCw size={12} />
           </button>
-          <button className="w-6 h-6 rounded-md flex items-center justify-center" style={{ color: "var(--unity-text-secondary)" }}>
-            <Settings size={11} />
+          <button className="w-6 h-6 rounded-md flex items-center justify-center unity-press" style={{ color: "var(--unity-text-secondary)" }} title="Settings">
+            <Settings size={12} />
           </button>
         </div>
       </div>
 
       {/* Object Header */}
       <div className="px-3 py-2.5 shrink-0" style={{ borderBottom: "1px solid var(--unity-border)" }}>
-        <div className="flex items-center gap-2 mb-1.5">
-          <div className="w-8 h-8 rounded-[8px] flex items-center justify-center" style={{ background: "rgba(79,195,247,0.1)", border: "1px solid var(--unity-border)" }}>
-            <Mountain size={16} style={{ color: "var(--unity-accent)" }} />
+        <div className="flex items-center gap-2 mb-2">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "var(--unity-accent-soft)", border: "1px solid var(--unity-border)" }}>
+            <Mountain size={17} style={{ color: "var(--unity-accent)" }} />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <input
               defaultValue="Terrain"
               className="bg-transparent outline-none w-full"
-              style={{ fontSize: "13px", fontWeight: 600, color: "var(--unity-text-primary)", fontFamily: "var(--font-family)" }}
+              style={{ fontSize: "14px", fontWeight: 600, color: "var(--unity-text-primary)", fontFamily: "var(--font-family)" }}
             />
+            <span style={{ fontSize: "10px", color: "var(--unity-text-tertiary)", fontFamily: "var(--font-mono)" }}>3 components</span>
           </div>
-          <div className="flex items-center gap-1">
-            <input type="checkbox" defaultChecked className="rounded" style={{ accentColor: "var(--unity-accent)", width: 12, height: 12 }} />
-            <button className="px-2 py-0.5 rounded-md" style={{ fontSize: "10px", background: "var(--unity-bg-elevated)", color: "var(--unity-text-secondary)", fontFamily: "var(--font-family)", border: "1px solid var(--unity-border)" }}>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <input type="checkbox" defaultChecked className="rounded" style={{ accentColor: "var(--unity-accent)", width: 13, height: 13 }} />
+            <button className="px-2 h-6 rounded-md unity-press" style={{ fontSize: "10px", background: "var(--unity-bg-elevated)", color: "var(--unity-text-secondary)", fontFamily: "var(--font-family)", border: "1px solid var(--unity-border)" }}>
               Static ▾
             </button>
           </div>
         </div>
-        <div className="flex gap-1">
+        <div className="flex gap-1.5">
           {[["Tag", "Untagged"], ["Layer", "Default"]].map(([k, v]) => (
-            <button key={k} className="flex-1 flex items-center justify-between px-2 h-5 rounded-md" style={{ background: "var(--unity-bg-elevated)", border: "1px solid var(--unity-border)", fontSize: "10px", fontFamily: "var(--font-family)" }}>
+            <button key={k} className="flex-1 flex items-center justify-between px-2.5 h-6 rounded-lg unity-press" style={{ background: "var(--unity-bg-elevated)", border: "1px solid var(--unity-border)", fontSize: "10px", fontFamily: "var(--font-family)" }}>
               <span style={{ color: "var(--unity-text-secondary)" }}>{k}</span>
               <span style={{ color: "var(--unity-text-primary)" }}>{v}</span>
-              <ChevronDown size={8} style={{ color: "var(--unity-text-secondary)" }} />
+              <ChevronDown size={9} style={{ color: "var(--unity-text-secondary)" }} />
             </button>
           ))}
+        </div>
+      </div>
+
+      {/* Search inside inspector */}
+      <div className="px-2 pt-2 shrink-0">
+        <div className="flex items-center gap-2 px-2.5 h-7 rounded-lg" style={{ background: "var(--unity-bg-surface)", border: "1px solid var(--unity-border)" }}>
+          <Search size={11} style={{ color: "var(--unity-text-secondary)", flexShrink: 0 }} />
+          <input
+            placeholder="Search components..."
+            className="flex-1 bg-transparent outline-none"
+            style={{ fontSize: "11px", color: "var(--unity-text-primary)", fontFamily: "var(--font-family)" }}
+          />
         </div>
       </div>
 
